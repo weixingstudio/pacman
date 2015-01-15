@@ -261,6 +261,13 @@ class CornersProblem(search.SearchProblem):
   This search problem finds paths through all four corners of a layout.
 
   You must select a suitable state space and successor function
+  coordinates:
+  y |
+     |
+     |
+     |
+     |_________________  x   (x, y)
+
   """
   
   def __init__(self, startingGameState):
@@ -269,7 +276,7 @@ class CornersProblem(search.SearchProblem):
     """
     self.walls = startingGameState.getWalls()
     self.startingPosition = startingGameState.getPacmanPosition()
-    top, right = self.walls.height-2, self.walls.width-2 
+    top, right = self.walls.height-2, self.walls.width-2
     self.corners = ((1,1), (1,top), (right, 1), (right, top))
     for corner in self.corners:
       if not startingGameState.hasFood(*corner):
@@ -278,19 +285,16 @@ class CornersProblem(search.SearchProblem):
     
     "*** YOUR CODE HERE ***"
     self._visited, self._visitedlist = {}, []
-    self.state = (0, 0, 0, 0)
-    self.start = (self.startingPosition, self.state)
+    self.corner_tate = (0, 0, 0, 0)
+    self.start = (self.startingPosition, self.corner_tate)
     
   def getStartState(self):
     "Returns the start state (in your state space, not the full Pacman state space)"
-    "*** YOUR CODE HERE ***"
-    #util.raiseNotDefined()
     return self.start
     
   def isGoalState(self, state):
     "Returns whether this search state is a goal state of the problem"
     "*** YOUR CODE HERE ***"
-
     return 0 not in state[1]
        
   def getSuccessors(self, state):
@@ -331,13 +335,13 @@ class CornersProblem(search.SearchProblem):
         else:
           corner_state = list(deepcopy(state[1]))
 
-        successors.append( ( (nextState, tuple(corner_state)), action, cost) )
-        
+        successors.append(((nextState, tuple(corner_state)), action, cost))
+
     # Bookkeeping for display purposes
     if state not in self._visited:
       self._visited[state] = True
       self._visitedlist.append(state)
-      
+
     self._expanded += 1
     return successors
 

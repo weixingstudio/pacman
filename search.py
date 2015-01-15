@@ -82,8 +82,6 @@ def depthFirstSearch(problem):
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   """
   "*** YOUR CODE HERE ***"
-  #util.raiseNotDefined()
-
   print "Start:", problem.getStartState()
   print "Is the start a goal?", problem.isGoalState(problem.getStartState())
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
@@ -100,6 +98,8 @@ def depthFirstSearch(problem):
   frontier.push(node)
 
   # DFS, non-recursive implementation
+  # by non-recurisve, we need to use stack to record
+  # which node  to visit when recall 
   while not frontier.isEmpty():
     node = frontier.pop()
     state = node["state"]
@@ -118,13 +118,39 @@ def depthFirstSearch(problem):
         sub_node["state"] = child[0]
         frontier.push(sub_node)
 
-  res = []
+  actions = []
   while node["action"] != None:
-    res.insert(0, node["action"])
+    actions.insert(0, node["action"])
     node = node["parent"]
 
-  print res
-  return res
+  return actions
+
+def depthFirstSearch_recursive(problem):
+  print "Start:", problem.getStartState()
+  print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+  print "Start's successors:", problem.getSuccessors(problem.getStartState())
+  print problem
+
+  visited = dict()
+  state = problem.getStartState()
+  action = []
+  DFS(problem, state, action, visited)
+  return action
+
+def DFS(problem, state, action, visited):
+  if problem.isGoalState(state):
+    return True
+
+  for child in problem.getSuccessors(state):
+    state = child[0]
+    if not visited.has_key(hash(state)):
+      visited[hash(state)] = state
+      action.append(child[1])
+      if DFS(problem, state, action, visited) == True:
+        return True
+      action.pop()
+
+  return False
 
 def breadthFirstSearch(problem):
   "Search the shallowest nodes in the search tree first. [p 74]"
@@ -132,6 +158,7 @@ def breadthFirstSearch(problem):
   print "Start:", problem.getStartState()
   print "Is the start a goal?", problem.isGoalState(problem.getStartState())
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
+  print problem
 
   frontier = util.Queue()
   visited = dict()
@@ -146,7 +173,7 @@ def breadthFirstSearch(problem):
   while not frontier.isEmpty():
     node = frontier.pop()
     state = node["state"]
-    print state
+    #print state
     if visited.has_key(state):
       continue
 
@@ -275,5 +302,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
+dfs_r = depthFirstSearch_recursive
 astar = aStarSearch
 ucs = uniformCostSearch
