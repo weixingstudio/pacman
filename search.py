@@ -105,7 +105,7 @@ def depthFirstSearch(problem):
     state = node["state"]
     if visited.has_key(hash(state)):
       continue
-    visited[hash(state)] = state
+    visited[hash(state)] = True
 
     if problem.isGoalState(state) == True:
       break
@@ -173,35 +173,35 @@ def breadthFirstSearch(problem):
   while not frontier.isEmpty():
     node = frontier.pop()
     state = node["state"]
-    #print state
     if visited.has_key(state):
       continue
 
     visited[state] = True
-    #print state
     if problem.isGoalState(state) == True:
       break
 
     for child in problem.getSuccessors(state):
-      #if child[0] not in visited:
-      sub_node = {}
-      sub_node["parent"] = node
-      sub_node["state"] = child[0]
-      sub_node["action"] = child[1]
-      frontier.push(sub_node)
+      if child[0] not in visited:
+        sub_node = {}
+        sub_node["parent"] = node
+        sub_node["state"] = child[0]
+        sub_node["action"] = child[1]
+        frontier.push(sub_node)
 
-  res = []
+  actions = []
   while node["action"] != None:
-    res.insert(0, node["action"])
+    actions.insert(0, node["action"])
     node = node["parent"]
 
-  print res
-  return res
+  return actions
       
 def uniformCostSearch(problem):
-  "Search the node of least total cost first. "
+  "Search the node of least total cost first."
+  '''
+  this uniformCostSearch algorithm is the same as A* search algorithm,
+  but in this project, A* search algorithm need cost estimation
+  '''
   "*** YOUR CODE HERE ***"
-  #util.raiseNotDefined()
   frontier = util.PriorityQueue()
   visited = dict()
 
@@ -217,12 +217,11 @@ def uniformCostSearch(problem):
     node = frontier.pop()
     state = node["state"]
     cost = node["cost"]
-    print cost
 
     if visited.has_key(state):
       continue
 
-    visited[state] = state
+    visited[state] = True
     if problem.isGoalState(state) == True:
       break
 
@@ -235,14 +234,12 @@ def uniformCostSearch(problem):
         sub_node["cost"] = child[2] + cost
         frontier.push(sub_node, sub_node["cost"])
 
-  res = []
+  actions = []
   while node["action"] != None:
-    res.insert(0, node["action"])
+    actions.insert(0, node["action"])
     node = node["parent"]
 
-  print res
-  return res
-
+  return actions
 
 def nullHeuristic(state, problem=None):
   """
@@ -254,7 +251,6 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
-  #util.raiseNotDefined()
   frontier = util.PriorityQueue()
   visited = dict()
 
@@ -291,13 +287,12 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         sub_node["eval"] = heuristic(sub_node["state"], problem)
         frontier.push(sub_node, sub_node["cost"] + node["eval"])
 
-  res = []
+  actions = []
   while node["action"] != None:
-    res.insert(0, node["action"])
+    actions.insert(0, node["action"])
     node = node["parent"]
 
-  print res
-  return res
+  return actions
   
 # Abbreviations
 bfs = breadthFirstSearch

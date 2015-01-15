@@ -432,13 +432,8 @@ def cornersHeuristic(state, problem):
     else:
       cost += (right - 1) + (top - 1)
 
-  #print corners
-
-  #cost += (small - 1) * (count - 1) + blocks * (count - 1)
-  #cost += (small - 1) * (count - 1)
-  print "heuristic: ", cost
+  #print "heuristic: ", cost
   return cost
-
 
 class AStarCornersAgent(SearchAgent):
   "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
